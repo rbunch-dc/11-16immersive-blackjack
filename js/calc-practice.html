@@ -1,0 +1,16 @@
+<script type="text/javascript">
+
+	calculateTotal(['2d', '6s', '12h'], 'player');
+
+	function calculateTotal(hand, who){
+		var total = 0; // init total to 0
+		var cardValue = 0 // temp var for value of current card
+		for(let i = 0; i < hand.length; i++){
+			console.log(hand[i]);
+			cardValue = Number(hand[i].slice(0,-1));
+			console.log(cardValue);
+			total += cardValue;
+			console.log(total);
+		}
+	}
+</script>
