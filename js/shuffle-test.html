@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	
+var theDeck = ['1s','2s','8d','9d'];
+
+for(let i = 0; i < 9001; i++){
+	var random1 = Math.floor(Math.random() * 4);
+	var random2 = Math.floor(Math.random() * 4);
+	// console.log(random1);
+	// console.log(random2);
+
+	// switch theDeck[random1] with theDeck[random2]
+	// store the value of theDeck[random1]
+	// console.log(theDeck);
+
+	var temp = theDeck[random1];
+	// console.log("Temp Card: ",temp);
+
+	// overwrite theDeck[random1] with theDeck[random2]
+	theDeck[random1] = theDeck[random2];
+
+	// overwrite theDeck[random2] with the temp (what used to be in random1)
+	theDeck[random2] = temp;
+}
+console.log(theDeck);
+
+</script>

@@ -1,5 +1,4 @@
 img{
-	width: 50px;
 	height: 120px;
 }
 
@@ -16,4 +15,6 @@ img{
 	background-color: #fff;
 	color: black;
 	margin: 10px;
+	width: 12.6%;
+	float: left;
 }
