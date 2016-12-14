@@ -1,7 +1,8 @@
 //----------------------
 // ----GLOBALS----------
 //----------------------
-var theDeck = createDeck();
+const freshDeck = createDeck();
+theDeck = freshDeck;
 var playersHand = [] //player1Squares in tictactoe
 var dealersHand = [] //player2Squares in tictactoe
 // var topOfDeck = 4; Could use without shift 
@@ -33,29 +34,72 @@ $(document).ready(function(){
 	});
 
 	$('.hit-button').click(function(){
-		//Hit stuff goes in here
-		// add a card to the JS and the DOM
-		playersHand.push(theDeck.shift());
-		var slotForNewCard = playersHand.length;
-		console.log(playersHand.length)
-
-		var lastCardIndex = playersHand.length-1;
-		placeCard('player',slotForNewCard,playersHand[lastCardIndex]);
-		// update the total
-		calculateTotal(playersHand, 'player');
-
-
-
-
-		// if(playersHand.length == 2){
-
-		// }
+		// console.log(calculateTotal(playersHand,'player'));
+		// var whatThePlayerHas = Number($('.player.total-number').text)
+		if(calculateTotal(playersHand,'player') < 21){
+			playersHand.push(theDeck.shift());
+			var lastCardIndex = playersHand.length-1;
+			var slotForNewCard = playersHand.length;
+			placeCard('player',slotForNewCard,playersHand[lastCardIndex]);
+			calculateTotal(playersHand, 'player');
+		}
 	});
 
 	$('.stand-button').click(function(){
 		// stand stuff goes in here
+		// What happens to player now? Nothing.
+		// Control now goes to teh dealer... if dealer has less than 17, draw card.
+		var dealerTotal = calculateTotal(dealersHand,'dealer');
+		while(dealerTotal < 17){
+			// Dealer has less than 17... hit away!
+			dealersHand.push(theDeck.shift());
+			var lastCardIndex = dealersHand.length-1;
+			var slotForNewCard = dealersHand.length;
+			placeCard('dealer',slotForNewCard,dealersHand[lastCardIndex]);
+			dealerTotal = calculateTotal(dealersHand,'dealer');
+		}
+		// The dealer has 17 or more. Player hit stand. Check to see who won.
+		checkWin();
+
 	});
 });
+
+function checkWin(){
+	var playerTotal = calculateTotal(playersHand,'player');
+	var dealerTotal = calculateTotal(dealersHand,'dealer');
+
+	// player has more than 21. Player busts, and loses.
+	if(playerTotal > 21){
+		//Player busted. Put some message in the DOM
+	//Deler busted, player is good, player wins.
+	}else if(dealerTotal > 21){
+		// Player safe, dealer busts, put message in DoM
+	//No one busted. See who is higher
+	}else{
+		if(playerTotal > dealerTotal){
+			// Player won. Say this somewhere in the DoM
+		}else if(dealerTotal > playerTotal){
+			// Dealer won. Say this somewhere in teh DoM
+		}else{
+			// Tie (push). Say somewhere in teh DOM
+		}
+	}
+}
+
+function reset(){
+	// the deck needs to be reset
+	theDeck = freshDeck; //Make a copy of our constant freshDeck
+	// the player and dealer hands need to be reset
+	playersHand = [];
+	dealersHand = [];
+	// reset the DOM
+	// - cards
+	$('.card').html('');
+	// - totals
+	var playerTotal = calculateTotal(playersHand,'player');
+	var dealerTotal = calculateTotal(dealersHand,'dealer');
+
+}
 
 function createDeck(){
 	var newDeck = [];
@@ -110,4 +154,5 @@ function calculateTotal(hand, who){
 	// Update the DOM with the new total
 	var classSelector = '.'+who+'-total-number';
 	$(classSelector).text(total);
+	return total;
 }
