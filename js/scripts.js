@@ -43,6 +43,7 @@ $(document).ready(function(){
 			placeCard('player',slotForNewCard,playersHand[lastCardIndex]);
 			calculateTotal(playersHand, 'player');
 		}
+		console.log(checkWin());
 	});
 
 	$('.stand-button').click(function(){
@@ -67,23 +68,30 @@ $(document).ready(function(){
 function checkWin(){
 	var playerTotal = calculateTotal(playersHand,'player');
 	var dealerTotal = calculateTotal(dealersHand,'dealer');
+	var winner = "";
 
 	// player has more than 21. Player busts, and loses.
 	if(playerTotal > 21){
 		//Player busted. Put some message in the DOM
+		winner = "dealer";
 	//Deler busted, player is good, player wins.
 	}else if(dealerTotal > 21){
 		// Player safe, dealer busts, put message in DoM
 	//No one busted. See who is higher
+		winner = "player";
 	}else{
 		if(playerTotal > dealerTotal){
 			// Player won. Say this somewhere in the DoM
+			winner = "player";
 		}else if(dealerTotal > playerTotal){
+			winner = "dealer";
 			// Dealer won. Say this somewhere in teh DoM
 		}else{
 			// Tie (push). Say somewhere in teh DOM
+			winner = "tie";
 		}
 	}
+	return winner;
 }
 
 function reset(){
@@ -143,14 +151,27 @@ function placeCard(who, where, whatCard){
 function calculateTotal(hand, who){
 	var total = 0; // init total to 0
 	var cardValue = 0 // temp var for value of current card
+	var hasAce = false;
+	var totalAces = 0;
 	for(let i = 0; i < hand.length; i++){
 		//Handle the face cards!
 		cardValue = Number(hand[i].slice(0,-1)); //start at 0 and copy until the last index
-		if(cardValue > 10){
+		if(cardValue == 1){
+			hasAce = true;
+			cardValue = 11;
+			totalAces++;
+		}else if(cardValue > 10){
 			cardValue = 10;
 		}
 		total += cardValue;
 	}
+
+	for(let i = 0; i<totalAces; i++){
+		if(total > 21){
+			total -= 10;
+		}
+	}
+
 	// Update the DOM with the new total
 	var classSelector = '.'+who+'-total-number';
 	$(classSelector).text(total);
